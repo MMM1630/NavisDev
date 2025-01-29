@@ -1,13 +1,10 @@
-from datetime import date
-
-from django.core.serializers import serialize
-from rest_framework import status, generics
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery
+from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery, Category
 from navis.serializers import ConsultationSerializers, ServicesSerializers, AboutsUsSerializers, ToolsSerializers, \
     ProjectsSerializers, ReviewsSerializers, VacancySerializers, JobApplicationSerializers, \
-    EventSerializers, GallerySerializers
+    EventSerializers, GallerySerializers, CategorySerializers, VideoSerializers
 
 
 class ConsultationView(APIView):
@@ -76,3 +73,17 @@ class GalleryView(APIView):
         gallery = Gallery.objects.all()
         serializer = GallerySerializers(gallery, many=True)
         return Response(serializer.data)
+
+class CategoryView(APIView):
+    def get(self, request, *args, **kwargs):
+        gallery = Category.objects.all()
+        serializer = CategorySerializers(gallery, many=True)
+        return Response(serializer.data)
+
+class VideoView(APIView):
+    def post(self, request):
+        serializer = VideoSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

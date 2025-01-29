@@ -1,6 +1,8 @@
 from django.contrib import admin
+from django import forms
 from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, JobApplication, \
-    Event, Contacts, Gallery
+    Event, Contacts, Gallery, Category, Video
+from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 @admin.register(Consultation)
@@ -8,8 +10,20 @@ class ConsultationAdmin(admin.ModelAdmin):
     model = Consultation
     list_display = ('phone_number', 'email')
 
+
+class ServicesAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorUploadingWidget())
+    class Meta:
+        model = Services
+        fields = '__all__'
+
+class PostAdmin(admin.ModelAdmin):
+    form = ServicesAdminForm
+
+
 @admin.register(Services)
 class ServicesAdmin(admin.ModelAdmin):
+    description = forms.CharField(widget=CKEditorUploadingWidget())
     prepopulated_fields = {'slug': ('sphere',)}
     fieldsets = [
         (
@@ -22,7 +36,7 @@ class ServicesAdmin(admin.ModelAdmin):
             "Services Detail",
             {
                 "classes": ["collapse"],
-                "fields": ["design", "analysis", "framework", "img_framework" ,"additionUI", "img_additionUI"],
+                "fields": [ "updated_at", "description",],
             },
         ),
     ]
@@ -60,19 +74,59 @@ class ProjectsAdmin(admin.ModelAdmin):
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-    list_display = ('image', 'first_name', 'last_name', 'job_title', 'title', 'language')
+    list_display = ('image', 'first_name', 'last_name', 'job_title', 'title','is_active' ,'language')
+
+
+class VacancyAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorUploadingWidget())
+    class Meta:
+        model = Vacancy
+        fields = '__all__'
+
+class VacancyAdmin(admin.ModelAdmin):
+    form = VacancyAdminForm
+
+
 
 @admin.register(Vacancy)
-class VacancyAdmin(admin.ModelAdmin):
+class Vacancy(admin.ModelAdmin):
+    list_display = ['id', ]
     prepopulated_fields = {'slug': ('title',)}
-    list_display = ('level','job_title' ,'schedule', 'title','title_work' ,'description', 'responsibilities', 'requirements', 'working_conditions', 'language')
+    # fieldsets = [
+    #     (
+    #         "Vacancy",
+    #         {
+    #             "fields": ["language", "level", "job_title", "schedule", "title"],
+    #         },
+    #     ),
+    #     (
+    #         "Vacancy detail",
+    #         {
+    #             "classes": ["collapse"],
+    #             "fields": ["title_work", "description", "responsibilities", "requirements", "working_conditions", "content"],
+    #         },
+    #     ),
+    # ]
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
     list_display = ('name', 'phone_number', 'email', 'urls', 'language')
 
+
+class EventAdminForm(forms.ModelForm):
+    content = forms.CharField(widget=CKEditorUploadingWidget())
+    class Meta:
+        model = Event
+        fields = '__all__'
+
+class EventAdmin(admin.ModelAdmin):
+    form = EventAdminForm
+
+
 @admin.register(Event)
 class EventsAdmin(admin.ModelAdmin):
+    description = forms.CharField(widget=CKEditorUploadingWidget())
+    forms = VacancyAdminForm
     fieldsets = [
         (
             "Events",
@@ -84,7 +138,7 @@ class EventsAdmin(admin.ModelAdmin):
             "Events Detail",
             {
                 "classes": ["collapse"],
-                "fields": ["description", "requirements", "date2", "time2"],
+                "fields": ["date2", "time2", "description"],
             },
         ),
     ]
@@ -98,3 +152,11 @@ class ContactsAdmin(admin.ModelAdmin):
 class GalleryAdmin(admin.ModelAdmin):
     fields = ('language', 'img')
     list_display = ('language', 'img')
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('project', 'vacancy', 'about_us', 'reviews', 'contacts')
+
+@admin.register(Video)
+class VideoAdmin(admin.ModelAdmin):
+    list_display = ('urls',)

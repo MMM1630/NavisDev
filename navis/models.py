@@ -1,9 +1,12 @@
+from tkinter.constants import CASCADE
+
 from django.db import models
-from django.db.models import IntegerField
+from django.db.models import IntegerField, ForeignKey
 from django.template.defaultfilters import slugify
 from django.utils.translation import gettext_lazy as _
 from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES
 from django.urls import reverse
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Consultation(models.Model):
@@ -23,14 +26,9 @@ class Services(models.Model):
     image = models.ImageField('Фото')
     sphere = models.CharField('Сфера', max_length=255)
     title = models.CharField('Описание', max_length=255)
-    industry = models.CharField('Отрасль', max_length=255)
-    design = models.CharField('Разработка дизайна в Nevisdevs', max_length=1000)
-    analysis = models.CharField('Анализ конкурентов', max_length=1000)
-    framework = models.CharField('Создание фреймворков', max_length=1000)
-    img_framework = models.ImageField('Создание фреймворков фото')
-    additionUI = models.CharField('Добавление UI(шрифт, цвет, иконки)', max_length=1000)
-    img_additionUI = models.ImageField('Добавление UI(шрифт, цвет, иконки) фото')
-    updated_at = models.DateTimeField(auto_now=True)
+    industry = RichTextUploadingField('Отрасль', config_name='default')
+    description = RichTextUploadingField(config_name='default')
+    updated_at = models.DateTimeField('Время добавление')
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
@@ -110,6 +108,7 @@ class Reviews(models.Model):
     last_name = models.CharField(max_length=50)
     job_title = models.CharField('Должность', max_length=255)
     title = models.CharField('Информация',max_length=1000)
+    is_active = models.BooleanField(default=False)
     slug = models.SlugField("Слаг", max_length=255, null=True, blank=True)
 
     class Meta:
@@ -124,15 +123,12 @@ class Reviews(models.Model):
 class Vacancy(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     level = models.CharField('Уровень', max_length=255, choices=STATUS_CHOICES)
-    job_title = models.CharField('должность', max_length=255, choices=JOB_TITLE_CHOICES)
+    job_title = models.CharField('Должность', max_length=255, choices=JOB_TITLE_CHOICES)
     schedule = models.CharField('График', max_length=255, choices=SCHEDULE_CHOICES)
     title = models.CharField('Описание', max_length=255)
-    title_work = models.CharField('Описание', max_length=255)
-    description = models.CharField('Информация' ,max_length=1000)
-    responsibilities = models.CharField('Обязанности', max_length=1000)
-    requirements = models.CharField('Требования', max_length=1000)
-    working_conditions = models.CharField('Условия работы', max_length=1000)
     slug = models.SlugField("Слаг", max_length=255, null=True, blank=True, unique=True)
+    content = RichTextUploadingField(config_name='default')
+
 
     class Meta:
         verbose_name = 'Вакансия'
@@ -165,8 +161,7 @@ class Event(models.Model):
     date = models.DateField('Дата добавление')
     time = models.TimeField('Время добавление')
     location = models.CharField('Местоположение', max_length=255)
-    description = models.CharField('Описание2', max_length=1000)
-    requirements = models.CharField('Требования', max_length=1000)
+    description = RichTextUploadingField(config_name='default')
     date2 = models.DateField('Дата добавление 2')
     time2 = models.TimeField('Время добавление 2')
 
@@ -192,3 +187,22 @@ class Contacts(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+
+class Category(models.Model):
+    project = models.ForeignKey(Projects, on_delete=models.CASCADE, verbose_name='Проекты')
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, verbose_name='Вакансии')
+    about_us = models.ForeignKey(AboutUs, on_delete=models.CASCADE, verbose_name='О нас')
+    reviews = models.ForeignKey(Reviews, on_delete=models.CASCADE, verbose_name='Отзывы')
+    contacts = models.ForeignKey(Contacts, on_delete=models.CASCADE, verbose_name='Контакты')
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категория'
+
+class Video(models.Model):
+    urls = models.URLField('Видио')
+
+    class Meta:
+        verbose_name = 'Видио'
+        verbose_name_plural = 'Видио'
