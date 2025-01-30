@@ -44,7 +44,9 @@ class VacancySerializers(serializers.ModelSerializer):
         model = Vacancy
         # fields = "__all__"
         # exclude = ['id']
-        fields = ['id', 'level','job_title' ,'schedule', 'title', 'language', 'content']
+        fields = ['id', 'level','job_title' ,'schedule','title_work' ,'title', 'language', 'content']
+
+
 
 class JobApplicationSerializers(serializers.ModelSerializer):
     id = serializers.IntegerField(read_only=True)

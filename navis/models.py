@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES
 from django.urls import reverse
 from ckeditor_uploader.fields import RichTextUploadingField
+from googletrans import Translator
+
 
 
 class Consultation(models.Model):
@@ -125,6 +127,7 @@ class Vacancy(models.Model):
     level = models.CharField('Уровень', max_length=255, choices=STATUS_CHOICES)
     job_title = models.CharField('Должность', max_length=255, choices=JOB_TITLE_CHOICES)
     schedule = models.CharField('График', max_length=255, choices=SCHEDULE_CHOICES)
+    title_work = models.CharField('Описание работы', max_length=255)
     title = models.CharField('Описание', max_length=255)
     slug = models.SlugField("Слаг", max_length=255, null=True, blank=True, unique=True)
     content = RichTextUploadingField(config_name='default')
@@ -138,6 +141,10 @@ class Vacancy(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
+
+    def get_job_title_translation(self):
+        translator = Translator()
+        return translator.translate(self.job_title, src='ru', dest='en').text
 
 class JobApplication(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)

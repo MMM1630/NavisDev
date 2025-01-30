@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from collections import defaultdict
+
 from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery, Category
 from navis.serializers import ConsultationSerializers, ServicesSerializers, AboutsUsSerializers, ToolsSerializers, \
     ProjectsSerializers, ReviewsSerializers, VacancySerializers, JobApplicationSerializers, \
@@ -48,11 +50,17 @@ class ReviewsView(APIView):
         serializer = ReviewsSerializers(reviews, many=True)
         return Response(serializer.data)
 
+
 class VacancyView(APIView):
     def get(self, request):
         vacancies = Vacancy.objects.all()
         serializer = VacancySerializers(vacancies, many=True)
-        return Response(serializer.data)
+
+        grouped_data = defaultdict(list)
+        for vacancy, data in zip(vacancies, serializer.data):
+            grouped_data[vacancy.job_title].append(data)
+
+        return Response(grouped_data)
 
 class JobApplicationView(APIView):
     def post(self, request):
