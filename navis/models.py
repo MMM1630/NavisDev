@@ -205,4 +205,4 @@ class Video(models.Model):
 
     class Meta:
         verbose_name = 'Видио'
-        verbose_name_plural = 'Видио'
+        verbose_name_plural = 'Видeo'
