@@ -201,8 +201,8 @@ class Category(models.Model):
         verbose_name_plural = 'Категория'
 
 class Video(models.Model):
-    urls = models.URLField('Видио')
+    urls = models.URLField('Видeo')
 
     class Meta:
-        verbose_name = 'Видио'
+        verbose_name = 'Видeo'
         verbose_name_plural = 'Видeo'
