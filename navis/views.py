@@ -71,11 +71,14 @@ class JobApplicationView(generics.GenericAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class EventListView(APIView):
-    def get(self, request, *args, **kwargs):
-        events = Event.objects.all()
-        serializer = EventSerializers(events, many=True)
-        return Response(serializer.data)
+class EventListView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializers
+
+    # def get(self, request, *args, **kwargs):
+    #     events = Event.objects.all()
+    #     serializer = EventSerializers(events, many=True)
+    #     return Response(serializer.data)
 
 class GalleryView(APIView):
     def get(self, request, *args, **kwargs):
