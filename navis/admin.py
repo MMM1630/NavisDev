@@ -92,21 +92,6 @@ class VacancyAdmin(admin.ModelAdmin):
 class Vacancy(admin.ModelAdmin):
     list_display = ['id', ]
     prepopulated_fields = {'slug': ('title',)}
-    # fieldsets = [
-    #     (
-    #         "Vacancy",
-    #         {
-    #             "fields": ["language", "level", "job_title", "schedule", "title"],
-    #         },
-    #     ),
-    #     (
-    #         "Vacancy detail",
-    #         {
-    #             "classes": ["collapse"],
-    #             "fields": ["title_work", "description", "responsibilities", "requirements", "working_conditions", "content"],
-    #         },
-    #     ),
-    # ]
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):

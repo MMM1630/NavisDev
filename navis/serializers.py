@@ -58,4 +58,4 @@ class GallerySerializers(serializers.ModelSerializer):
 class VideoSerializers(serializers.ModelSerializer):
     class Meta:
         model = Video
-        fields = ['urls']
+        fields = "__all__"

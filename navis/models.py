@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models import IntegerField
 from django.template.defaultfilters import slugify
-from django.utils.translation import gettext_lazy as _
 from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES
 from django.urls import reverse
 from ckeditor_uploader.fields import RichTextUploadingField
@@ -137,10 +136,6 @@ class Vacancy(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
-
-    # def get_job_title_translation(self):
-    #     translator = Translator()
-    #     return translator.translate(self.job_title, src='ru', dest='en').text
 
 class JobApplication(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)

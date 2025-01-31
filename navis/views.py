@@ -1,11 +1,9 @@
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from collections import defaultdict
 from navis.models import Video, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery
 from navis.serializers import ServicesSerializers, ToolsSerializers, ProjectsSerializers, ReviewsSerializers, VacancySerializers, JobApplicationSerializers, \
-    EventSerializers, GallerySerializers,VideoSerializers, AboutUsSerializers, \
-    ConsultationSerializer
+    EventSerializers, GallerySerializers,VideoSerializers, AboutUsSerializers,ConsultationSerializer
 
 
 class ConsultationView(generics.GenericAPIView):
@@ -20,46 +18,28 @@ class ConsultationView(generics.GenericAPIView):
 
 
 class ServicesView(APIView):
-    def get(self, request):
-        services = Services.objects.all()
-        serializer = ServicesSerializers(services, many=True)
-        return Response(serializer.data)
+    queryset = Services.objects.all()
+    serializers_class = ServicesSerializers
 
 class AboutUsView(APIView):
-    def get(self, *args, **kwargs):
-        queryset = AboutUs.objects.all()
-        serializer = AboutUsSerializers(queryset, many=True)
-        return Response(serializer.data)
+    queryset = AboutUs.objects.all()
+    serializers_class = AboutUsSerializers
 
-class ToolsView(APIView):
-    def get(self, request):
-        tools = Tools.objects.all()
-        serializer = ToolsSerializers(tools, many=True)
-        return Response(serializer.data)
+class ToolsView(generics.ListAPIView):
+    queryset = Tools.objects.all()
+    serializer_class = ToolsSerializers
 
-class ProjectsView(APIView):
-    def get(self, request):
-        project = Projects.objects.get(id=1)
-        serializer = ProjectsSerializers(project)
-        return Response(serializer.data)
+class ProjectsView(generics.ListAPIView):
+    queryset =  Projects.objects.all()
+    serializer_class = ProjectsSerializers
 
-class ReviewsView(APIView):
-    def get(self, request):
-        reviews = Reviews.objects.all()
-        serializer = ReviewsSerializers(reviews, many=True)
-        return Response(serializer.data)
+class ReviewsView(generics.ListAPIView):
+    queryset = Reviews.objects.all()
+    serializer_class = ReviewsSerializers
 
-
-class VacancyView(APIView):
-    def get(self, request):
-        vacancies = Vacancy.objects.all()
-        serializer = VacancySerializers(vacancies, many=True)
-
-        grouped_data = defaultdict(list)
-        for vacancy, data in zip(vacancies, serializer.data):
-            grouped_data[vacancy.job_title].append(data)
-
-        return Response(grouped_data)
+class VacancyView(generics.ListAPIView):
+    queryset = Vacancy.objects.all()
+    serializer_class = VacancySerializers
 
 class JobApplicationView(generics.GenericAPIView):
     serializer_class = JobApplicationSerializers
@@ -75,19 +55,10 @@ class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializers
 
-    # def get(self, request, *args, **kwargs):
-    #     events = Event.objects.all()
-    #     serializer = EventSerializers(events, many=True)
-    #     return Response(serializer.data)
+class GalleryView(generics.ListAPIView):
+    queryset = Gallery.objects.all()
+    serializer_class = GallerySerializers
 
-class GalleryView(APIView):
-    def get(self, request, *args, **kwargs):
-        gallery = Gallery.objects.all()
-        serializer = GallerySerializers(gallery, many=True)
-        return Response(serializer.data)
-
-class VideoView(APIView):
-    def get(self, request, *args, **kwargs):
-        gallery = Video.objects.all()
-        serializer = VideoSerializers(gallery, many=True)
-        return Response(serializer.data)
+class VideoView(generics.ListAPIView):
+    queryset = Video.objects.all()
+    serializer_class = VideoSerializers
