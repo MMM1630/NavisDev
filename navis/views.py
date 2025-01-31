@@ -20,7 +20,7 @@ class ConsultationView(generics.ListAPIView):
 
 class ServicesView(generics.ListAPIView):
     queryset = Services.objects.all()
-    serializers_class = ServicesSerializers
+    serializer_class = ServicesSerializers
 
 class AboutUsView(generics.ListAPIView):
     queryset = AboutUs.objects.all()
