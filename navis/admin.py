@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django import forms
 from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, JobApplication, \
-    Event, Contacts, Gallery, Category, Video
+    Event, Contacts, Gallery, Video
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 @admin.register(Consultation)
 class ConsultationAdmin(admin.ModelAdmin):
     model = Consultation
-    list_display = ('phone_number', 'email')
+    list_display = ('language', 'phone_number', 'email', 'message')
 
 
 class ServicesAdminForm(forms.ModelForm):
@@ -152,10 +152,6 @@ class ContactsAdmin(admin.ModelAdmin):
 class GalleryAdmin(admin.ModelAdmin):
     fields = ('language', 'img')
     list_display = ('language', 'img')
-
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('project', 'vacancy', 'about_us', 'reviews', 'contacts')
 
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):

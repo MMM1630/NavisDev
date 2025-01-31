@@ -1,75 +1,59 @@
 from rest_framework import serializers
 from .models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, JobApplication, Event, Gallery, \
-    Category, Video
+ Video
 
-
-class ConsultationSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
+class ConsultationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Consultation
-        fields = ['phone_number', 'email', 'language']
+        fields = "__all__"
+
 
 class ServicesSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Services
-        fields = ['image', 'sphere', 'title', 'industry','description', 'language']
+        fields = "__all__"
 
-class AboutsUsSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
+class AboutUsSerializers(serializers.ModelSerializer):
     class Meta:
         model = AboutUs
-        fields = ['title', 'image', 'description', 'language']
+        fields = "__all__"
 
 class ToolsSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Tools
-        fields = ['name', 'image', 'language']
+        fields = "__all__"
 
 class ProjectsSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Projects
-        fields = ['image', 'title', 'language']
+        fields = "__all__"
 
 class ReviewsSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Reviews
-        fields = ['image', 'first_name', 'last_name', 'job_title', 'title','is_active' ,'language']
+        fields = "__all__"
 
 class VacancySerializers(serializers.ModelSerializer):
     class Meta:
         model = Vacancy
-        # fields = "__all__"
-        # exclude = ['id']
-        fields = ['id', 'level','job_title' ,'schedule','title_work' ,'title', 'language', 'content']
-
+        fields = "__all__"
 
 
 class JobApplicationSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = JobApplication
-        fields = ['name', 'phone_number', 'email', 'urls']
+        fields = "__all__"
 
 class EventSerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Event
-        fields = ['image','topic' ,'title', 'date', 'time', 'location', 'description', 'date2' ,'time2', 'language']
+        fields = "__all__"
 
 class GallerySerializers(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
     class Meta:
         model = Gallery
-        fields = ['language', 'img']
+        fields = "__all__"
 
-class CategorySerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ['project', 'vacancy', 'about_us', 'reviews', 'contacts']
 
 class VideoSerializers(serializers.ModelSerializer):
     class Meta:

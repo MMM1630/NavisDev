@@ -1,26 +1,23 @@
-from tkinter.constants import CASCADE
-
 from django.db import models
-from django.db.models import IntegerField, ForeignKey
+from django.db.models import IntegerField
 from django.template.defaultfilters import slugify
 from django.utils.translation import gettext_lazy as _
 from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES
 from django.urls import reverse
 from ckeditor_uploader.fields import RichTextUploadingField
 
-
-
 class Consultation(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
-    phone_number = models.CharField(_('Номер телефона'), max_length=20, default='+996')
-    email = models.EmailField(_('@Email'), max_length=50)
+    phone_number = models.CharField(max_length=20, default="+996")
+    email = models.EmailField(max_length=50)
+    message = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name = "Консультация"
-        verbose_name_plural = "Консультация"
+        verbose_name = 'Консультация'
+        verbose_name_plural = 'Консультация'
 
     def __str__(self):
-        return f"консультация на номере {self.phone_number} еме-йл {self.email}"
+        return f"{self.email} ({self.phone_number})"
 
 class Services(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
@@ -194,17 +191,6 @@ class Contacts(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
-
-class Category(models.Model):
-    project = models.ForeignKey(Projects, on_delete=models.CASCADE, verbose_name='Проекты')
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, verbose_name='Вакансии')
-    about_us = models.ForeignKey(AboutUs, on_delete=models.CASCADE, verbose_name='О нас')
-    reviews = models.ForeignKey(Reviews, on_delete=models.CASCADE, verbose_name='Отзывы')
-    contacts = models.ForeignKey(Contacts, on_delete=models.CASCADE, verbose_name='Контакты')
-
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категория'
 
 class Video(models.Model):
     urls = models.URLField('Видeo')

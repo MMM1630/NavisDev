@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 from .sitemap import SitemapView
 from django.conf import settings
 from navis.views import ConsultationView, ServicesView, AboutUsView, ToolsView, ProjectsView, ReviewsView, \
-    VacancyView, JobApplicationView, EventListView, GalleryView, CategoryView, VideoView
+    VacancyView, JobApplicationView, EventListView, GalleryView, VideoView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -22,7 +22,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
-    path('Consultation/', ConsultationView.as_view(), name='Consultation'),
+    path("Consultation/", ConsultationView.as_view(), name="Consultation"),
     path('Services', ServicesView.as_view(), name='Services'),
     path('AboutUsView/', AboutUsView.as_view(), name='AboutUs'),
     path('Tools/', ToolsView.as_view(), name='ToolsView'),
@@ -32,7 +32,6 @@ urlpatterns = [
     path('JobApplication', JobApplicationView.as_view(), name='JobApplication'),
     path('Events', EventListView.as_view(), name='Vacancy'),
     path('Gallery', GalleryView.as_view(), name='Gallery'),
-    path('Category', CategoryView.as_view(), name='Category'),
     path('Youtube', VideoView.as_view(), name='Youtube'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path("api/sitemap.xml", SitemapView.as_view(), name="sitemap"),

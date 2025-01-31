@@ -1,41 +1,40 @@
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from collections import defaultdict
+from navis.models import Video, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery
+from navis.serializers import ServicesSerializers, ToolsSerializers, ProjectsSerializers, ReviewsSerializers, VacancySerializers, JobApplicationSerializers, \
+    EventSerializers, GallerySerializers,VideoSerializers, AboutUsSerializers, \
+    ConsultationSerializer
 
-from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, Event, Gallery, Category
-from navis.serializers import ConsultationSerializers, ServicesSerializers, AboutsUsSerializers, ToolsSerializers, \
-    ProjectsSerializers, ReviewsSerializers, VacancySerializers, JobApplicationSerializers, \
-    EventSerializers, GallerySerializers, CategorySerializers, VideoSerializers
 
+class ConsultationView(generics.GenericAPIView):
+    serializer_class = ConsultationSerializer
 
-class ConsultationView(APIView):
-    queryset = Consultation.objects.all()
-    serializer_class = ConsultationSerializers
-
-    def post(self, request):
-        serializer = ConsultationSerializers(data=request.data)
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()  # Save the new object
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ServicesView(APIView):
     def get(self, request):
         services = Services.objects.all()
-        serializer = ServicesSerializers(services, many=True)  # Сериализуем данные
+        serializer = ServicesSerializers(services, many=True)
         return Response(serializer.data)
 
 class AboutUsView(APIView):
     def get(self, *args, **kwargs):
         queryset = AboutUs.objects.all()
-        serializer = AboutsUsSerializers(queryset, many=True)
+        serializer = AboutUsSerializers(queryset, many=True)
         return Response(serializer.data)
 
 class ToolsView(APIView):
     def get(self, request):
         tools = Tools.objects.all()
-        serializer = ToolsSerializers(tools, many=True)  # Сериализуем данные
+        serializer = ToolsSerializers(tools, many=True)
         return Response(serializer.data)
 
 class ProjectsView(APIView):
@@ -62,11 +61,13 @@ class VacancyView(APIView):
 
         return Response(grouped_data)
 
-class JobApplicationView(APIView):
-    def post(self, request):
-        serializer = JobApplicationSerializers(data=request.data)
+class JobApplicationView(generics.GenericAPIView):
+    serializer_class = JobApplicationSerializers
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)  # Deserialize input data
         if serializer.is_valid():
-            serializer.save()
+            serializer.save()  # Save the new object
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -82,16 +83,8 @@ class GalleryView(APIView):
         serializer = GallerySerializers(gallery, many=True)
         return Response(serializer.data)
 
-class CategoryView(APIView):
-    def get(self, request, *args, **kwargs):
-        gallery = Category.objects.all()
-        serializer = CategorySerializers(gallery, many=True)
-        return Response(serializer.data)
-
 class VideoView(APIView):
-    def post(self, request):
-        serializer = VideoSerializers(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get(self, request, *args, **kwargs):
+        gallery = Video.objects.all()
+        serializer = VideoSerializers(gallery, many=True)
+        return Response(serializer.data)
