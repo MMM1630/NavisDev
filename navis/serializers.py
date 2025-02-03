@@ -34,19 +34,11 @@ class ReviewsSerializers(serializers.ModelSerializer):
         fields = "__all__"
 
 class VacancySerializers(serializers.ModelSerializer):
-    key = serializers.SerializerMethodField()
 
     class Meta:
         model = Vacancy
         fields = "__all__"
 
-    def get_key(self, obj):
-        job_mapping = {
-            "Frontend Developer": "Frontend",
-            "Backend Developer": "Backend",
-            "Fullstack Developer": "Fullstack",
-        }
-        return job_mapping.get(obj.job_title, "other")
 
 
 class JobApplicationSerializers(serializers.ModelSerializer):

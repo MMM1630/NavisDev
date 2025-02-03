@@ -2,6 +2,7 @@ STATUS_CHOICES = [
     ("Junior", "Junior"),
     ("Middle", "Middle"),
     ("Senior", "Senior"),
+    ("test", "test")
 ]
 
 SCHEDULE_CHOICES = [
@@ -19,4 +20,5 @@ JOB_TITLE_CHOICES = [
     ("Backend", "Backend"),
     ("Frontend", "Frontend"),
     ("Fullstack", "Fullstack"),
+    ("test", "test"),
 ]
