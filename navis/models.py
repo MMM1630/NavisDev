@@ -1,22 +1,20 @@
 from django.db import models
 from django.db.models import IntegerField
 from django.template.defaultfilters import slugify
-from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES
+from navis.choices import STATUS_CHOICES, SCHEDULE_CHOICES, LANGUAGE_CHOICES, JOB_TITLE_CHOICES, FILE_TYPE_CHOICES
 from django.urls import reverse
 from ckeditor_uploader.fields import RichTextUploadingField
 
+
 class Consultation(models.Model):
-    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
-    phone_number = models.CharField(max_length=20, default="+996")
-    email = models.EmailField(max_length=50)
-    message = models.CharField(max_length=255)
+    name = models.CharField(max_length=30, null=True, blank=True)
+    email = models.EmailField(max_length=100, null=True, blank=True)
+    phone_number = models.CharField(max_length=20)
+    message = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Консультация'
-        verbose_name_plural = 'Консультация'
-
-    def __str__(self):
-        return f"{self.email} ({self.phone_number})"
+        verbose_name_plural = 'Консультации'
 
 class Services(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
@@ -24,6 +22,8 @@ class Services(models.Model):
     sphere = models.CharField('Сфера', max_length=255)
     title = models.CharField('Описание', max_length=255)
     industry = RichTextUploadingField('Отрасль', config_name='default')
+    baner = models.ImageField('Банер')
+    titletwo = models.CharField('Описание 2', max_length=255)
     description = RichTextUploadingField(config_name='default')
     updated_at = models.DateTimeField('Время добавление')
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -66,9 +66,10 @@ class Gallery(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     img = models.ImageField(upload_to='gallery_images/')  # Поле для изображения
 
-    verbose_name = 'Галерея'
     class Meta:
+        verbose_name = 'Галерея'
         verbose_name_plural = 'Галерея'
+    
 
 class Tools(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
@@ -79,8 +80,10 @@ class Tools(models.Model):
         verbose_name = 'Инструменты'
         verbose_name_plural = 'Инструменты'
 
-    def __str__(self):
-        return self.name
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
 
 class Projects(models.Model):
@@ -112,11 +115,6 @@ class Reviews(models.Model):
         verbose_name = 'Отзывы'
         verbose_name_plural = 'Отзывы'
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
-
 class Vacancy(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     level = models.CharField('Уровень', max_length=255, choices=STATUS_CHOICES)
@@ -132,24 +130,17 @@ class Vacancy(models.Model):
         verbose_name = 'Вакансия'
         verbose_name_plural = 'Вакансии'
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.title)
-        super().save(*args, **kwargs)
 
 class JobApplication(models.Model):
-    language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
     name = models.CharField('Имя', max_length=255)
-    phone_number = models.IntegerField('Номер', default='+996')
+    phone_number = models.CharField('Номер', max_length=20)
     email = models.EmailField('@Email', max_length=100)
-    urls = models.URLField('Ссылка на соцсеть')
+    urls = models.URLField('Ссылка на соцсеть', null=True, blank=True)
+    fields = models.FileField('Прикрепите файл', upload_to='job_application', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Заявление о приеме на работу'
         verbose_name_plural = 'Заявление о приеме на работу'
-
-    def __str__(self):
-        return self.name
 
 class Event(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)
@@ -170,7 +161,7 @@ class Event(models.Model):
 class Contacts(models.Model):
     language = models.CharField(choices=LANGUAGE_CHOICES, max_length=255)
     name = models.CharField('Имя', max_length=255)
-    phone_number = IntegerField('Номер телефона', default='+996')
+    phone_number = IntegerField('Номер телефона')
     interested =  models.CharField('Что вас интересует', max_length=255)
     date = models.DateField('Дата')
     time = models.TimeField('Время')
@@ -181,11 +172,6 @@ class Contacts(models.Model):
         verbose_name = 'Контакт'
         verbose_name_plural = 'Контакт'
 
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
-
 
 class Video(models.Model):
     urls = models.URLField('Видeo')
@@ -193,3 +179,37 @@ class Video(models.Model):
     class Meta:
         verbose_name = 'Видeo'
         verbose_name_plural = 'Видeo'
+
+
+class Urls_to_social_network(models.Model):
+    logo = models.ImageField('Фото')
+    urls = models.URLField('Ссылка на соцсеть', null=True, blank=True)
+    name_social = models.CharField('Название соц сети', null=True, blank=True)
+    slug = models.SlugField("Слаг", max_length=255, null=True, blank=True, unique=True)
+
+
+    class Meta:
+        verbose_name = 'Ссылки на соц сети Navis Devs'
+        verbose_name_plural = 'Ссылки на соц сети Navis Devs'
+
+
+class UploadedFile(models.Model):
+    file = models.FileField('Файл',upload_to='media')
+    uploaded_at = models.DateTimeField('Время добовление',auto_now_add=True)
+    file_type = models.CharField('Тип файла',max_length=5, choices=FILE_TYPE_CHOICES, default='other')
+
+    def __str__(self):
+        return f"File uploaded on {self.uploaded_at} (Type: {self.file_type})"
+    
+    def save(self, *args, **kwargs):
+        if self.file.name.endswith('.pdf'):
+            self.file_type = 'pdf'
+        elif self.file.name.endswith('.pptx'):
+            self.file_type = 'pptx'
+        else:
+            self.file_type = 'other'
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Презинтация'
+        verbose_name_plural = 'Презинтация'

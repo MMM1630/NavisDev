@@ -12,8 +12,8 @@ SCHEDULE_CHOICES = [
 ]
 
 LANGUAGE_CHOICES = [
-    ("Russian", "Rus"),
-    ("English", "ENG"),
+    ("ru", "Rus"),
+    ("en", "ENG"),
 ]
 
 JOB_TITLE_CHOICES = [
@@ -21,4 +21,10 @@ JOB_TITLE_CHOICES = [
     ("Frontend", "Frontend"),
     ("Fullstack", "Fullstack"),
     ("test", "test"),
+]
+
+FILE_TYPE_CHOICES = [
+        ('pdf', 'PDF'),
+        ('pptx', 'PowerPoint'),
+        ('other', 'Other'),
 ]

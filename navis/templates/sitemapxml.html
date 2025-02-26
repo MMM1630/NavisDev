@@ -2,19 +2,17 @@
 
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
    <url>
-      <loc>http://127.0.0.1:8000/</loc>
+      <loc>navisdevs.ru/</loc>
       <changefreq>daily</changefreq>
       <priority>1.0</priority>
    </url>
 
    {% for post in posts %}
    <url>
-      <loc>http://127.0.0.1:8000/{{ post.language }}/news/{{ post.title|slugify }}/</loc>
+      <loc>navisdevs.ru/{{ post.language }}/news/{{ post.slug }}/</loc>
       <changefreq>daily</changefreq>
       <lastmod>{{ post.updated_at|date:"c" }}</lastmod>
       <priority>0.8</priority>
    </url>
    {% endfor %}
 </urlset>
-
-

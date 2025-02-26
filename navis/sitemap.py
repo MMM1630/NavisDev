@@ -15,4 +15,3 @@ class SitemapView(TemplateView):
     def render_to_response(self, context, **kwargs):
         xml_content = render_to_string(self.template_name, context)
         return HttpResponse(xml_content, content_type=self.content_type)
-

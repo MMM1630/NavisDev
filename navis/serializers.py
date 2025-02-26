@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, JobApplication, Event, Gallery, \
- Video
+ Video, Urls_to_social_network, UploadedFile
 
 class ConsultationSerializer(serializers.ModelSerializer):
     class Meta:
@@ -60,4 +60,15 @@ class GallerySerializers(serializers.ModelSerializer):
 class VideoSerializers(serializers.ModelSerializer):
     class Meta:
         model = Video
+        fields = "__all__"
+
+
+class Urls_to_social_networkSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Urls_to_social_network
+        fields = "__all__"
+
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadedFile
         fields = "__all__"

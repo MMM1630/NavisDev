@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django import forms
 from navis.models import Consultation, Services, AboutUs, Tools, Projects, Reviews, Vacancy, JobApplication, \
-    Event, Contacts, Gallery, Video
+    Event, Contacts, Gallery, Video, Urls_to_social_network, UploadedFile
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 
 
 @admin.register(Consultation)
 class ConsultationAdmin(admin.ModelAdmin):
     model = Consultation
-    list_display = ('language', 'phone_number', 'email', 'message')
+    list_display = ('name', 'phone_number', 'message', 'email')
 
 
 class ServicesAdminForm(forms.ModelForm):
@@ -25,7 +25,7 @@ class PostAdmin(admin.ModelAdmin):
 class ServicesAdmin(admin.ModelAdmin):
     description = forms.CharField(widget=CKEditorUploadingWidget())
     prepopulated_fields = {'slug': ('sphere',)}
-    fieldsets = [
+    list_displey = [
         (
             "General info",
             {
@@ -36,7 +36,7 @@ class ServicesAdmin(admin.ModelAdmin):
             "Services Detail",
             {
                 "classes": ["collapse"],
-                "fields": [ "updated_at", "description",],
+                "fields": [ "updated_at","baner", "titletwo","description"],
             },
         ),
     ]
@@ -44,7 +44,7 @@ class ServicesAdmin(admin.ModelAdmin):
 @admin.register(AboutUs)
 class AboutUsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
-    fieldsets = [
+    list_displey = [
         (
             "AboutUs",
             {
@@ -68,13 +68,22 @@ class ToolsAdmin(admin.ModelAdmin):
 
 @admin.register(Projects)
 class ProjectsAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('title',)}
     list_display = ('image', 'title', 'language')
+
 
 @admin.register(Reviews)
 class ReviewAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug': ('title',)}
-    list_display = ('image', 'first_name', 'last_name', 'job_title', 'title','is_active' ,'language')
+    list_display = ('image', 'first_name', 'last_name', 'job_title', 'title', 'is_active', 'language')
+
+    fieldsets = (
+        ("Основная информация", {
+            'fields': ('first_name', 'last_name', 'job_title')
+        }),
+        ("Дополнительно", {
+            'fields': ('image', 'title', 'is_active', 'language'),
+            'classes': ('collapse',) 
+        }),
+    )
 
 
 class VacancyAdminForm(forms.ModelForm):
@@ -95,7 +104,8 @@ class Vacancy(admin.ModelAdmin):
 
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'phone_number', 'email', 'urls', 'language')
+    model = JobApplication
+    list_display = ('name', 'phone_number', 'email', 'urls', 'fields')
 
 
 class EventAdminForm(forms.ModelForm):
@@ -112,7 +122,7 @@ class EventAdmin(admin.ModelAdmin):
 class EventsAdmin(admin.ModelAdmin):
     description = forms.CharField(widget=CKEditorUploadingWidget())
     forms = VacancyAdminForm
-    fieldsets = [
+    list_displey = [
         (
             "Events",
             {
@@ -131,7 +141,7 @@ class EventsAdmin(admin.ModelAdmin):
 @admin.register(Contacts)
 class ContactsAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
-    fields = ('language', 'name', 'phone_number', 'interested', 'date', 'time', 'location', 'slug')
+    list_displey = ('language', 'name', 'phone_number', 'interested', 'date', 'time', 'location', 'slug')
 
 @admin.register(Gallery)
 class GalleryAdmin(admin.ModelAdmin):
@@ -141,3 +151,15 @@ class GalleryAdmin(admin.ModelAdmin):
 @admin.register(Video)
 class VideoAdmin(admin.ModelAdmin):
     list_display = ('urls',)
+
+@admin.register(Urls_to_social_network)
+class Urls_to_social_network(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name_social',)}
+    list_displey = ("name_social" , "urls", "logo", "slug")
+
+
+@admin.register(UploadedFile)
+class UploadedFileAdmin(admin.ModelAdmin):
+    list_display = ('file', 'uploaded_at', 'file_type')
+    list_filter = ('file_type',)
+    search_fields = ('file',)
