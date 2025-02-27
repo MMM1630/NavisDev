@@ -136,11 +136,11 @@ class JobApplication(models.Model):
     phone_number = models.CharField('Номер', max_length=20)
     email = models.EmailField('@Email', max_length=100)
     urls = models.URLField('Ссылка на соцсеть', null=True, blank=True)
-    fields = models.FileField('Прикрепите файл', upload_to='job_application', null=True, blank=True)
+    file = models.FileField('Прикрепите файл', upload_to='job_application', null=True, blank=True)
 
     class Meta:
         verbose_name = 'Заявление о приеме на работу'
-        verbose_name_plural = 'Заявление о приеме на работу'
+        verbose_name_plural = 'Заявления о приеме на работу'
 
 class Event(models.Model):
     language = models.CharField(max_length=10, choices=LANGUAGE_CHOICES)

@@ -99,20 +99,20 @@ class VacancyView(generics.ListAPIView):
 class JobApplicationView(generics.GenericAPIView):
     serializer_class = JobApplicationSerializers
     queryset = JobApplication.objects.all()
-    parser_classes = (MultiPartParser, FormParser)  # Позволяет загружать файлы
+    parser_classes = (MultiPartParser, FormParser) 
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
-            jobApplication = serializer.save()
-            
+            job_application = serializer.save()
+
             message = (
                 f"💬 *Заявление о приеме на работу!*\n\n"
-                f"👨‍💻/👩‍💻 *Имя:* {jobApplication.name}\n"
-                f"📞 *Телефон:* {jobApplication.phone_number}\n"
-                f"📧 *Email:* {jobApplication.email}\n"
-                f"🌐 *Ссылка на соц сеть:* {jobApplication.urls if jobApplication.urls else 'Нет'}\n"
-                f"📁 *Прикрепленный файл:* {'Есть' if jobApplication.file else 'Нет прикрепленного файла'}\n"
+                f"👨‍💻/👩‍💻 *Имя:* {job_application.name}\n"
+                f"📞 *Телефон:* {job_application.phone_number}\n"
+                f"📧 *Email:* {job_application.email}\n"
+                f"🌐 *Ссылка на соц сеть:* {job_application.urls if job_application.urls else 'Нет'}\n"
+                f"📁 *Прикрепленный файл:* {'Есть' if job_application.file else 'Нет прикрепленного файла'}\n"
             )
 
             text_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
@@ -128,8 +128,8 @@ class JobApplicationView(generics.GenericAPIView):
             else:
                 print(f"❌ Ошибка при отправке сообщения: {text_response.text}")
 
-            if jobApplication.file:
-                file_path = jobApplication.file.path  
+            if job_application.file:
+                file_path = job_application.file.path  
                 print(f"📂 Отправка файла: {file_path}")
 
                 if os.path.exists(file_path):
@@ -137,7 +137,7 @@ class JobApplicationView(generics.GenericAPIView):
                         files = {"document": file}
                         file_payload = {
                             "chat_id": TELEGRAM_CHAT_ID,
-                            "caption": f"📁 *Файл от {jobApplication.name}*",
+                            "caption": f"📁 *Файл от {job_application.name}*",
                             "parse_mode": "Markdown"
                         }
                         file_response = requests.post(
@@ -152,8 +152,8 @@ class JobApplicationView(generics.GenericAPIView):
                 else:
                     print("⚠️ Файл не найден на сервере!")
 
-        return Response(serializer.errors, status=400)
-        return Response(serializer.errors, status=400)
+            return Response(serializer.data, status=201)  
+        return Response(serializer.errors, status=400) 
 
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()

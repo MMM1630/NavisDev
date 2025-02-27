@@ -105,7 +105,7 @@ class Vacancy(admin.ModelAdmin):
 @admin.register(JobApplication)
 class JobApplicationAdmin(admin.ModelAdmin):
     model = JobApplication
-    list_display = ('name', 'phone_number', 'email', 'urls', 'fields')
+    list_display = ('name', 'phone_number', 'email', 'urls', 'file')
 
 
 class EventAdminForm(forms.ModelForm):
